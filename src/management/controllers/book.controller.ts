@@ -9,23 +9,23 @@ export class BookController {
 
   @ApiOkResponse()
   @Get('book/all')
-  getAllBooks() {
-    return this.bookService.getAllBooks();
+  async getAllBooks() {
+    return await this.bookService.getAllBooks();
   }
 
   @ApiCreatedResponse({ description: 'The record has been successfully created.'})
   @Post('book/add')
-  addBook(){
-    return this.bookService.addBook();
+  async addBook(){
+    return await this.bookService.addBook();
   }
 
   @Put('book/updated/:bookId')
-  updateBookById(){
-    return this.bookService.updateBookById();
+  async updateBookById(){
+    return await this.bookService.updateBookById();
   }
 
   @Delete('book/delete/:bookId')
-  deleteBookById(){
-    return this.bookService.deleteBookById();
+  async deleteBookById(){
+    return await this.bookService.deleteBookById();
   }
 }

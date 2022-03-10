@@ -1,22 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class BookService {
-  constructor(private configService: ConfigService){}
-  getAllBooks(): string {
-    return `List of all Books! ${this.configService.get<string>('DB_URL_MANAGEMENT')},  ${this.configService.get<string>('database.management')}, ${this.configService.get<string>('global.redis')}`;
+  private readonly logger = new Logger(BookService.name)
+  constructor(
+    private configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
+
+  async getAllBooks(): Promise<string> {
+    const cacheRes = await this.cacheManager.get('book');
+    this.logger.log('cacheRes :: ', cacheRes);
+    return `List of all Books! ${this.configService.get<string>(
+      'DB_URL_MANAGEMENT',
+    )},  ${this.configService.get<string>(
+      'database.management',
+    )}, ${this.configService.get<string>('global.redis.url')}`;
   }
 
-  addBook(){
-    return 'Book added!'
+  async addBook() {
+    const cacheRes = await this.cacheManager.set('book', 'The Kashmir Files');
+    this.logger.log('cacheRes :: ', cacheRes);
+    return 'Book added!';
   }
 
-  updateBookById(){
-    return 'Update Book by Id'
+  async updateBookById() {
+    return 'Update Book by Id';
   }
 
-  deleteBookById(){
-    return 'Delete Book By Id'
+  async deleteBookById() {
+    const cacheRes = await this.cacheManager.del('book');
+    this.logger.log('cacheRes :: ', cacheRes);
+    return 'Delete Book By Id';
   }
 }
