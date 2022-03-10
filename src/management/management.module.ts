@@ -8,6 +8,10 @@ import { BookService } from './services/book.service';
 import configuration from 'config/configuration';
 import { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,8 +29,22 @@ import * as redisStore from 'cache-manager-redis-store';
       //   port: Number(process.env.REDIS_PORT),
       // },
     }),
+    ClientsModule.register([
+      {
+        name: 'AUTH_PACKAGE',
+        transport: Transport.GRPC,
+        options: {
+          package: 'auth',
+          protoPath: join(__dirname, '../auth.proto'),
+          url: 'localhost:5000'
+        }
+      }
+    ])
   ],
   controllers: [BookController, AuthorController],
-  providers: [BookService, AuthorService],
+  providers: [BookService, AuthorService, {
+    provide: APP_GUARD,
+    useClass: AuthGuard
+  }],
 })
 export class ManagementModule {}
