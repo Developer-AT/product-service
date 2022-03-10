@@ -7,6 +7,7 @@ import { ClientModule } from './client/client.module';
 import { ConfigModule } from '@nestjs/config';
 import globalConfig from 'config/global.config';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,7 +25,7 @@ import globalConfig from 'config/global.config';
         path: 'manage',
         module: ManagementModule,
       },
-    ])
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService],
