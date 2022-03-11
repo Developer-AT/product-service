@@ -13,19 +13,21 @@ export class AuthorController {
     return this.authorService.getAllAuthors();
   }
 
-  @ApiCreatedResponse({ description: 'The record has been successfully created.'})
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+  })
   @Post('add')
-  addAuthor(){
+  addAuthor() {
     return this.authorService.addAuthor();
   }
 
   @Put('updated/:authorId')
-  updateAuthorById(){
+  updateAuthorById() {
     return this.authorService.updateAuthorById();
   }
 
   @Delete('delete/:authorId')
-  deleteAuthorById(){
+  deleteAuthorById() {
     return this.authorService.deleteAuthorById();
   }
 }

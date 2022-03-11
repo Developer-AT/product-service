@@ -7,17 +7,14 @@ import globalConfig from 'config/global.config';
 import { BookModule } from './modules/books/book.module';
 import { AuthorModule } from './modules/authors/author.module';
 import configuration from 'config/configuration';
-import { MongooseModule } from '@nestjs/mongoose';
 import { RedisClientOptions } from 'redis';
-import * as redisStore from 'cache-manager-redis-store';
 import { redisProvider } from './providers/redis/redis.provider';
-
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [globalConfig, configuration]
+      load: [globalConfig, configuration],
     }),
     CacheModule.register<RedisClientOptions>(...redisProvider),
     BookModule,

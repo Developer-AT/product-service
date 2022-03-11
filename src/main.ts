@@ -16,7 +16,10 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: {
         package: configService.get<string>('PROTO_DEMO_PACKAGE'),
-        protoPath: join(__dirname, configService.get<string>('PROTO_DEMO_PATH')),
+        protoPath: join(
+          __dirname,
+          configService.get<string>('PROTO_DEMO_PATH'),
+        ),
         url: configService.get<string>('PROTO_DEMO_URL'),
       },
     },

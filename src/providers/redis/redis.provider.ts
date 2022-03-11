@@ -5,8 +5,6 @@ export const redisProvider = [
     store: redisStore,
     url: process.env.REDIS_URL,
     ttl: 5000,
-    isGlobal:true
+    isGlobal: true,
   },
 ];
-
-
