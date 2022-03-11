@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, Inject, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  OnModuleInit,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
@@ -7,7 +13,10 @@ import { Observable } from 'rxjs';
 export class AuthGuard implements CanActivate, OnModuleInit {
   private authService;
 
-  constructor(private reflector: Reflector, @Inject('AUTH_PACKAGE') private client: ClientGrpc){}
+  constructor(
+    private reflector: Reflector,
+    @Inject('AUTH_PACKAGE') private client: ClientGrpc,
+  ) {}
 
   onModuleInit() {
     this.authService = this.client.getService('AuthService');
@@ -19,16 +28,16 @@ export class AuthGuard implements CanActivate, OnModuleInit {
     const request = context.switchToHttp().getRequest();
     console.log(request.headers);
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
-    this.validate(request.headers.authorization, roles).subscribe(data => {
+    this.validate(request.headers.authorization, roles).subscribe((data) => {
       console.log(data);
-    })
-    return true
+    });
+    return true;
   }
 
-  validate(token, roles):  Observable<object>{
+  validate(token, roles): Observable<object> {
     return this.authService.Validate({
       token: token,
-      roles: roles
-    })
+      roles: roles,
+    });
   }
 }

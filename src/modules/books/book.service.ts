@@ -4,7 +4,7 @@ import { Cache } from 'cache-manager';
 
 @Injectable()
 export class BookService {
-  private readonly logger = new Logger(BookService.name)
+  private readonly logger = new Logger(BookService.name);
   constructor(
     private configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,

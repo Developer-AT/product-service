@@ -6,15 +6,15 @@ export class AuthorService {
     return 'List of all Authors!';
   }
 
-  addAuthor(){
-    return 'Author added!'
+  addAuthor() {
+    return 'Author added!';
   }
 
-  updateAuthorById(){
-    return 'Update Author by Id'
+  updateAuthorById() {
+    return 'Update Author by Id';
   }
 
-  deleteAuthorById(){
-    return 'Delete Author By Id'
+  deleteAuthorById() {
+    return 'Delete Author By Id';
   }
 }
