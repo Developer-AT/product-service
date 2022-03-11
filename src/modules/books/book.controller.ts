@@ -1,7 +1,9 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { GrpcMethod } from '@nestjs/microservices';
 import { ApiCreatedResponse, ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/role.decorator';
-import { BookService } from '../services/book.service';
+import { BookService } from './book.service';
 
 @ApiTags('Books')
 @Controller()
@@ -10,31 +12,40 @@ export class BookController {
 
   @ApiOkResponse()
   @ApiBearerAuth()
-  @Get('book/all')
+  @Get('all')
   @Roles('user')
+  @UseGuards(AuthGuard)
   async getAllBooks() {
-    return await this.bookService.getAllBooks();
+    return {books: await this.bookService.getAllBooks()};
   }
 
   @ApiCreatedResponse({ description: 'The record has been successfully created.'})
   @ApiBearerAuth()
-  @Post('book/add')
+  @Post('add')
   @Roles('admin')
+  @UseGuards(AuthGuard)
   async addBook(){
     return await this.bookService.addBook();
   }
 
-  @Put('book/updated/:bookId')
+  @Put('updated/:bookId')
   @ApiBearerAuth()
   @Roles('user')
+  @UseGuards(AuthGuard)
   async updateBookById(){
     return await this.bookService.updateBookById();
   }
 
   @ApiBearerAuth()
   @Roles('admin')
-  @Delete('book/delete/:bookId')
+  @Delete('delete/:bookId')
+  @UseGuards(AuthGuard)
   async deleteBookById(){
     return await this.bookService.deleteBookById();
+  }
+
+  @GrpcMethod('DemoService', 'GetAllBooks')
+  async getAllBooksGrpc(payload) {
+    return {books: await this.bookService.getAllBooks()};
   }
 }

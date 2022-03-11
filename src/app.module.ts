@@ -1,29 +1,35 @@
-import { Module } from '@nestjs/common';
+import { Module, CacheModule } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ManagementModule } from './management/management.module';
-import { ClientModule } from './client/client.module';
 import { ConfigModule } from '@nestjs/config';
 import globalConfig from 'config/global.config';
+import { BookModule } from './modules/books/book.module';
+import { AuthorModule } from './modules/authors/author.module';
+import configuration from 'config/configuration';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
+import { redisProvider } from './providers/redis/redis.provider';
 
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [globalConfig]
+      load: [globalConfig, configuration]
     }),
-    ClientModule,
-    ManagementModule,
+    CacheModule.register<RedisClientOptions>(...redisProvider),
+    BookModule,
+    AuthorModule,
     RouterModule.register([
       {
-        path: 'clients',
-        module: ClientModule,
+        path: 'book',
+        module: BookModule,
       },
       {
-        path: 'manage',
-        module: ManagementModule,
+        path: 'author',
+        module: AuthorModule,
       },
     ]),
   ],
