@@ -15,12 +15,12 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: configService.get<string>('PROTO_DEMO_PACKAGE'),
+        package: configService.get<string>('PROTO_BOOK_PACKAGE'),
         protoPath: join(
           __dirname,
-          configService.get<string>('PROTO_DEMO_PATH'),
+          configService.get<string>('PROTO_BOOK_PATH'),
         ),
-        url: configService.get<string>('PROTO_DEMO_URL'),
+        url: configService.get<string>('PROTO_BOOK_URL'),
       },
     },
     { inheritAppConfig: true },
