@@ -2,23 +2,13 @@ import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { BookController } from './book.controller';
 import { BookService } from './book.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+import { ClientsModule } from '@nestjs/microservices';
 import { DatabaseModule } from 'src/providers/database/db.module';
+import { grpcProviders } from 'src/providers/grpc/grpc.provider';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    ClientsModule.register([
-      {
-        name: 'AUTH_PACKAGE',
-        transport: Transport.GRPC,
-        options: {
-          package: process.env.PROTO_AUTH_PACKAGE,
-          protoPath: join(__dirname, process.env.PROTO_AUTH_PATH),
-          url: process.env.PROTO_AUTH_URL,
-        },
-      },
-    ]),
+    ClientsModule.register(grpcProviders),
     DatabaseModule,
   ],
   controllers: [BookController],
