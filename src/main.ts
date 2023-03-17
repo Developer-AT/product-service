@@ -6,35 +6,35 @@ import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/');
+    const app = await NestFactory.create(AppModule);
+    app.setGlobalPrefix('api/');
 
-  const configService = app.get(ConfigService);
+    const configService = app.get(ConfigService);
 
-  app.connectMicroservice<MicroserviceOptions>(
-    {
-      transport: Transport.GRPC,
-      options: {
-        package: configService.get<string>('PROTO_BOOK_PACKAGE'),
-        protoPath: join(
-          __dirname,
-          configService.get<string>('PROTO_BOOK_PATH'),
-        ),
-        url: configService.get<string>('PROTO_BOOK_URL'),
-      },
-    },
-    { inheritAppConfig: true },
-  );
-  const config = new DocumentBuilder()
-    .setTitle('NestJs Demo Project')
-    .setDescription('The Demo API description')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+    app.connectMicroservice<MicroserviceOptions>(
+        {
+            transport: Transport.GRPC,
+            options: {
+                package: configService.get<string>('PROTO_BOOK_PACKAGE'),
+                protoPath: join(
+                    __dirname,
+                    configService.get<string>('PROTO_BOOK_PATH'),
+                ),
+                url: configService.get<string>('PROTO_BOOK_URL'),
+            },
+        },
+        { inheritAppConfig: true },
+    );
+    const config = new DocumentBuilder()
+        .setTitle('NestJs Demo Project')
+        .setDescription('The Demo API description')
+        .setVersion('1.0')
+        .addBearerAuth()
+        .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('doc', app, document);
-  await app.startAllMicroservices();
-  await app.listen(configService.get<string>('PORT'));
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('doc', app, document);
+    await app.startAllMicroservices();
+    await app.listen(configService.get<string>('PORT'));
 }
 bootstrap();
