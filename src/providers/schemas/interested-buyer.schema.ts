@@ -19,9 +19,10 @@ export class InterestedBuyer {
     suggestedPrice: number;
 
     @Prop({ type: Boolean, default: true })
-    isNegotiable: boolean
+    isNegotiable: boolean;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const InterestedBuyerSchema =
+    SchemaFactory.createForClass(InterestedBuyer);
 
-export const UserModelName = 'User';
+export const InterestedBuyerModelName = 'InterestedBuyer';

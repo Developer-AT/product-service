@@ -12,6 +12,7 @@ export enum UserRole {
 
 export enum ClientType {
     USER = 'user',
+    ADMIN = 'admin',
 }
 
 export enum UserType {

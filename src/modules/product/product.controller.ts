@@ -1,58 +1,68 @@
 import { AuthGuard } from 'src/guards/auth.guard';
-import { Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
-import { GrpcMethod } from '@nestjs/microservices';
 import {
-    ApiCreatedResponse,
-    ApiTags,
-    ApiOkResponse,
-    ApiBearerAuth,
-} from '@nestjs/swagger';
-import { Roles } from 'src/decorators/role.decorator';
-import { BookService } from './product.service';
+    Controller,
+    Delete,
+    Get,
+    Post,
+    Put,
+    UseGuards,
+    Body,
+    Patch,
+    Param,
+} from '@nestjs/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { AccessBy, HavingRole } from 'src/decorators/access-control.decorator';
+import { ProductService } from './product.service';
+import { ClientType, UserRole } from 'src/interfaces/enums';
+import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
+import { ValidationPipe } from 'src/pipes/validation.pipe';
 
-@ApiTags('Books')
-@Controller()
-export class BookController {
-    constructor(private readonly bookService: BookService) {}
+@ApiTags('Product')
+@Controller('product')
+export class ProductController {
+    constructor(private readonly productService: ProductService) {}
 
-    @ApiOkResponse()
     @ApiBearerAuth()
     @Get('all')
-    @Roles('user')
+    @AccessBy(ClientType.USER)
+    @HavingRole(UserRole.BRONZE, UserRole.SILVER, UserRole.GOLD)
     @UseGuards(AuthGuard)
-    async getAllBooks() {
-        return { books: await this.bookService.getAllBooks() };
-    }
-
-    @ApiCreatedResponse({
-        description: 'The record has been successfully created.',
-    })
-    @ApiBearerAuth()
-    @Post('add')
-    @Roles('admin')
-    @UseGuards(AuthGuard)
-    async addBook() {
-        return await this.bookService.addBook();
-    }
-
-    @Put('updated/:bookId')
-    @ApiBearerAuth()
-    @Roles('user')
-    @UseGuards(AuthGuard)
-    async updateBookById() {
-        return await this.bookService.updateBookById();
+    async getProducts() {
+        return await this.productService.getProducts();
     }
 
     @ApiBearerAuth()
-    @Roles('admin')
-    @Delete('delete/:bookId')
+    @Post('')
+    @AccessBy(ClientType.USER)
+    @HavingRole(UserRole.BRONZE, UserRole.SILVER, UserRole.GOLD)
     @UseGuards(AuthGuard)
-    async deleteBookById() {
-        return await this.bookService.deleteBookById();
+    async addProduct(@Body(new ValidationPipe()) payload: CreateProductDto) {
+        return await this.productService.createProduct(payload);
     }
 
-    @GrpcMethod('DemoService', 'GetAllBooks')
-    async getAllBooksGrpc(payload) {
-        return { books: await this.bookService.getAllBooks() };
+    @Patch(':productId')
+    @ApiBearerAuth()
+    @AccessBy(ClientType.USER)
+    @HavingRole(UserRole.BRONZE, UserRole.SILVER, UserRole.GOLD)
+    @UseGuards(AuthGuard)
+    async updateBookById(
+        @Param('productId') productId: string,
+        @Body(new ValidationPipe()) payload: UpdateProductDto,
+    ) {
+        return await this.productService.updateProductById(productId, payload);
     }
+
+    @Delete(':productId')
+    @ApiBearerAuth()
+    @AccessBy(ClientType.USER)
+    @HavingRole(UserRole.BRONZE, UserRole.SILVER, UserRole.GOLD)
+    @UseGuards(AuthGuard)
+    async deleteBookById(@Param('productId') productId: string) {
+        return await this.productService.deleteProductById(productId);
+    }
+
+    // @GrpcMethod('DemoService', 'GetAllBooks')
+    // async getAllBooksGrpc(payload) {
+    //     return { books: await this.bookService.getAllBooks() };
+    // }
 }

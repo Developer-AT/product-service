@@ -32,7 +32,7 @@ export class JwtProvider {
     setPayload(payload: { [key: string]: any }): void {
         this.payload = JSON.stringify({
             ...payload,
-            service: ServiceType.USER,
+            service: ServiceType.PRODUCT,
             expiresIn:
                 new Date().getTime() +
                 this.configService.get<number>('service.ttl'),
@@ -54,7 +54,7 @@ export class JwtProvider {
     private setSecretKey(): void {
         const path = join(
             __dirname,
-            this.configService.get<string>('service.keys.private.user'),
+            this.configService.get<string>('service.keys.private.product'),
         );
         this.privateKey = readFileSync(path, 'utf8');
     }
@@ -133,7 +133,7 @@ export class JwtProvider {
 
                 case ServiceType.PRODUCT:
                     key = this.configService.get<string>(
-                        'service.keys.public.book',
+                        'service.keys.public.product',
                     );
                     break;
 

@@ -15,7 +15,7 @@ export class Product {
     @Prop({
         type: Types.ObjectId,
         required: true,
-        ref: 'Category'
+        ref: 'Category',
     })
     category: Category;
 
@@ -34,7 +34,7 @@ export class Product {
     @Prop({ type: Boolean, default: false })
     isSoldOut: boolean;
 
-    @Prop({ type: Boolean,  default: false })
+    @Prop({ type: Boolean, default: false })
     isRemoved: boolean;
 }
 

@@ -19,7 +19,7 @@ export class AuthProvider implements OnModuleInit {
         private readonly responseHandler: ResponseUtilsProvider,
     ) {
         this.metaData = new Metadata();
-        this.metaData.set('service', ServiceType.USER);
+        this.metaData.set('service', ServiceType.PRODUCT);
     }
     onModuleInit() {
         this.authService = this.client.getService('AuthService');

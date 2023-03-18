@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthProvider } from './auth/auth.provider';
-import { BookProvider } from './user/user.provider';
+import { UserProvider } from './user/user.provider';
 import { JwtModule } from './../jwt/jwt.module';
 
 @Module({
@@ -33,7 +33,7 @@ import { JwtModule } from './../jwt/jwt.module';
         JwtModule,
         UtilsModule,
     ],
-    providers: [AuthProvider, BookProvider],
-    exports: [AuthProvider, BookProvider],
+    providers: [AuthProvider, UserProvider],
+    exports: [AuthProvider, UserProvider],
 })
 export class GrpcModule {}
