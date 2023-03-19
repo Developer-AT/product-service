@@ -1,3 +1,3 @@
-export interface GetUser {
+export interface GrpcGetUserPayload {
     id: string;
 }

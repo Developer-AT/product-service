@@ -9,6 +9,7 @@ import {
     Body,
     Patch,
     Param,
+    Req,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AccessBy, HavingRole } from 'src/decorators/access-control.decorator';
@@ -36,7 +37,13 @@ export class ProductController {
     @AccessBy(ClientType.USER)
     @HavingRole(UserRole.BRONZE, UserRole.SILVER, UserRole.GOLD)
     @UseGuards(AuthGuard)
-    async addProduct(@Body(new ValidationPipe()) payload: CreateProductDto) {
+    async addProduct(
+        @Body(new ValidationPipe()) payload: CreateProductDto,
+        @Req() req: any,
+    ) {
+        const userData = req.userData;
+        payload.ownerId = userData._id.toString();
+        payload.ownerName = `${userData.firstName} ${userData.lastName}`;
         return await this.productService.createProduct(payload);
     }
 

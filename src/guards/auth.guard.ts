@@ -1,15 +1,19 @@
+import { Request } from 'express';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { UnauthorizedException } from '@nestjs/common/exceptions/unauthorized.exception';
 import { Reflector } from '@nestjs/core';
 import { ClientType } from 'src/interfaces/enums';
 import { ValidateToken } from 'src/interfaces/module-level/auth.interface';
 import { AuthProvider } from 'src/providers/grpc/auth/auth.provider';
+import { UserProvider } from 'src/providers/grpc/user/user.provider';
+import { GrpcGetUserPayload } from 'src/interfaces/module-level/user.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(
         private reflector: Reflector,
         private readonly authprovider: AuthProvider,
+        private readonly userprovider: UserProvider,
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -35,17 +39,22 @@ export class AuthGuard implements CanActivate {
             'roles',
             context.getHandler(),
         );
-        console.log('Auth--Guard--canActivate--roles', accessBy, roles);
-        const data = await this.validate(authToken[1], accessBy, roles);
-        console.log(data);
+
+        const tokenData = await this.validate(authToken[1], accessBy, roles);
+        console.log('Auth--Guard--canActivate--data', tokenData);
+        const userData = await this.getUserByKeycloakId(
+            tokenData.data.userKeycloakId,
+        );
+        console.log('Auth--Guard--canActivate--userData', userData);
+        request.userData = userData.data;
         return true;
     }
 
     async validate(
-        token,
+        token: string,
         accessBy: ClientType,
         roles: string[],
-    ): Promise<object> {
+    ): Promise<any> {
         const dataToValidate: ValidateToken = {
             token: token,
             roles: roles,
@@ -53,5 +62,13 @@ export class AuthGuard implements CanActivate {
         };
         console.log('Auth--Guard--validate--dataToValidate', dataToValidate);
         return await this.authprovider.validate(dataToValidate);
+    }
+
+    async getUserByKeycloakId(id: string) {
+        const payload: GrpcGetUserPayload = {
+            id: id,
+        };
+        console.log('Auth--Guard--getUserByKeycloakId--payload', payload);
+        return await this.userprovider.getUserByKeycloakId(payload);
     }
 }

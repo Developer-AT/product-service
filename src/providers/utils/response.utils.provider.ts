@@ -5,7 +5,7 @@ import { GRpcResponse, HttpResponse } from 'src/interfaces/global.interface';
 
 @Injectable()
 export class ResponseUtilsProvider {
-    gRpcRsponseHandler(res: GRpcResponse): HttpResponse {
+    gRpcResponseHandler(res: GRpcResponse): HttpResponse {
         const response: HttpResponse = {
             status: res.status,
             message: res.message,

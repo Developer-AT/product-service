@@ -34,7 +34,7 @@ export class AuthProvider implements OnModuleInit {
                 )
             );
             console.log('Auth--Service--validate--res', res);
-            return this.responseHandler.gRpcRsponseHandler(res);
+            return this.responseHandler.gRpcResponseHandler(res);
         } catch (error) {
             console.error('Auth--Service--validate--Error', error);
             throw error;

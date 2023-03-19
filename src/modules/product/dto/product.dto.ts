@@ -10,12 +10,10 @@ export class CreateProductDto {
     @IsString()
     category: string;
 
-    @ApiProperty({ type: String, required: true })
-    @IsString()
+    @ApiProperty({ type: String, required: true, readOnly: true })
     ownerId: string;
 
-    @ApiProperty({ type: String, required: true })
-    @IsString()
+    @ApiProperty({ type: String, required: true, readOnly: true })
     ownerName: string;
 
     @ApiProperty({ type: Number, required: true })
